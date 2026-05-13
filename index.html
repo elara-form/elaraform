@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>도전 신청하기 🪂 | Elara</title>
+<link href="https://fonts.googleapis.com/css2?family=Gmarket+Sans:wght@300;500;700&family=Noto+Sans+KR:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --purple: #7F77DD;
+    --purple-light: #EEEDFE;
+    --purple-dark: #3C3489;
+    --pink: #ED93B1;
+    --pink-light: #FBEAF0;
+    --bg: #F7F6FF;
+    --white: #FFFFFF;
+    --text: #1a1a2e;
+    --muted: #8884aa;
+    --border: rgba(127,119,221,0.2);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    min-height: 100vh;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text);
+    padding: 24px 16px 60px;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(237,147,177,0.18) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -80px; left: -80px;
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, rgba(127,119,221,0.15) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 헤더 */
+  .header {
+    text-align: center;
+    padding: 32px 24px 28px;
+    background: var(--white);
+    border-radius: var(--radius) var(--radius) 0 0;
+    border: 1px solid var(--border);
+    border-bottom: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--purple), var(--pink));
+  }
+
+  .header-emoji {
+    font-size: 48px;
+    display: block;
+    margin-bottom: 10px;
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
+  .header h1 {
+    font-family: 'Gmarket Sans', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--purple-dark);
+    margin-bottom: 6px;
+  }
+
+  .header p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* 폼 바디 */
+  .form-body {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: 1px solid rgba(127,119,221,0.1);
+    padding: 24px 20px;
+  }
+
+  .field {
+    margin-bottom: 20px;
+  }
+
+  .field label {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .req { color: var(--pink); }
+
+  .hint {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--muted);
+    margin-left: 2px;
+  }
+
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+
+  input[type="text"]:focus,
+  textarea:focus {
+    border-color: var(--purple);
+    background: var(--white);
+  }
+
+  input::placeholder, textarea::placeholder {
+    color: #c0bdd8;
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 80px;
+    line-height: 1.6;
+  }
+
+  /* 카테고리 칩 */
+  .chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .chip {
+    padding: 7px 14px;
+    border-radius: 20px;
+    border: 1.5px solid var(--border);
+    font-size: 12.5px;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    background: var(--bg);
+    color: var(--muted);
+    transition: all 0.15s;
+    user-select: none;
+  }
+
+  .chip:hover { border-color: var(--purple); color: var(--purple); }
+
+  .chip.selected {
+    background: var(--purple-light);
+    border-color: var(--purple);
+    color: var(--purple-dark);
+    font-weight: 500;
+  }
+
+  /* 무서움 지수 */
+  .scale-row {
+    display: flex;
+    gap: 8px;
+  }
+
+  .scale-btn {
+    flex: 1;
+    height: 44px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--border);
+    background: var(--bg);
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    color: var(--muted);
+    transition: all 0.15s;
+  }
+
+  .scale-btn:hover { border-color: var(--purple); color: var(--purple); }
+
+  .scale-btn.active {
+    background: var(--purple-light);
+    border-color: var(--purple);
+    color: var(--purple-dark);
+    font-weight: 500;
+  }
+
+  .scale-label {
+    font-size: 11px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    margin-top: 6px;
+    padding: 0 2px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px dashed var(--border);
+    margin: 22px 0;
+  }
+
+  /* 제출 버튼 */
+  .submit-btn {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, var(--purple), #9b8ff0);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 15px;
+    font-family: 'Gmarket Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.1s;
+    letter-spacing: -0.3px;
+  }
+
+  .submit-btn:hover { opacity: 0.9; }
+  .submit-btn:active { transform: scale(0.98); }
+
+  .submit-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .notice {
+    font-size: 11px;
+    color: var(--muted);
+    text-align: center;
+    margin-top: 12px;
+    line-height: 1.7;
+  }
+
+  /* 완료 화면 */
+  .success-box {
+    display: none;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: 1px solid rgba(127,119,221,0.1);
+    padding: 48px 24px;
+    text-align: center;
+  }
+
+  .success-box .big-emoji {
+    font-size: 56px;
+    display: block;
+    margin-bottom: 16px;
+    animation: pop 0.4s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes pop {
+    0% { transform: scale(0); }
+    100% { transform: scale(1); }
+  }
+
+  .success-box h2 {
+    font-family: 'Gmarket Sans', sans-serif;
+    font-size: 20px;
+    color: var(--purple-dark);
+    margin-bottom: 8px;
+  }
+
+  .success-box p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 24px;
+  }
+
+  .reset-btn {
+    padding: 10px 24px;
+    border-radius: 20px;
+    border: 1.5px solid var(--purple);
+    background: var(--purple-light);
+    color: var(--purple-dark);
+    font-size: 13px;
+    font-family: 'Noto Sans KR', sans-serif;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .reset-btn:hover { background: var(--purple); color: #fff; }
+
+  /* 하단 */
+  .footer {
+    background: var(--purple-light);
+    border: 1px solid var(--border);
+    border-top: none;
+    border-radius: 0 0 var(--radius) var(--radius);
+    padding: 14px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--purple-dark);
+  }
+
+  /* 로딩 스피너 */
+  .spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .error-msg {
+    font-size: 12px;
+    color: #e24b4a;
+    margin-top: 8px;
+    text-align: center;
+    display: none;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <span class="header-emoji">🪂</span>
+    <h1>도전 신청하기</h1>
+    <p>해보고 싶은데 주저됐던 것, 두려워서 힘들었던 것<br>엘라라가 대신 해드릴게요 🙈</p>
+  </div>
+
+  <div class="form-body" id="formBody">
+
+    <div class="field">
+      <label>닉네임 <span class="req">*</span></label>
+      <input type="text" id="nickname" placeholder="예) 겁쟁이토끼 🐰" maxlength="20">
+    </div>
+
+    <div class="field">
+      <label>어떤 도전인가요? <span class="req">*</span></label>
+      <div class="chip-group" id="categoryChips">
+        <div class="chip" data-val="액티비티">🎢 액티비티</div>
+        <div class="chip" data-val="예술">🎨 예술</div>
+        <div class="chip" data-val="운동">💪 운동</div>
+        <div class="chip" data-val="문화유희">🎭 문화 유희</div>
+        <div class="chip" data-val="사회적도전">😬 사회적 도전</div>
+        <div class="chip" data-val="기타">✨ 기타</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>도전 내용 <span class="req">*</span> <span class="hint">구체적일수록 좋아요!</span></label>
+      <textarea id="content" placeholder="예) 롤러코스터 3번 연속 타기, 번지점프, 낯선 사람한테 말 걸기..."></textarea>
+    </div>
+
+    <div class="field">
+      <label>왜 못 하셨나요? <span class="hint">선택</span></label>
+      <textarea id="reason" placeholder="예) 너무 무서워서, 창피해서, 혼자라서..." style="min-height:60px;"></textarea>
+    </div>
+
+    <div class="field">
+      <label>무서움 / 힘듦 지수 <span class="req">*</span></label>
+      <div class="scale-row" id="scaleRow">
+        <button class="scale-btn" data-v="1">1</button>
+        <button class="scale-btn" data-v="2">2</button>
+        <button class="scale-btn" data-v="3">3</button>
+        <button class="scale-btn" data-v="4">4</button>
+        <button class="scale-btn" data-v="5">5</button>
+      </div>
+      <div class="scale-label"><span>별거 아님 😌</span><span>죽을 것 같음 💀</span></div>
+    </div>
+
+    <div class="field">
+      <label>응원 메시지 <span class="hint">선택 · 엘라라에게 한마디!</span></label>
+      <input type="text" id="cheer" placeholder="예) 파이팅! 믿어요 엘라라 🫶" maxlength="50">
+    </div>
+
+    <hr class="divider">
+
+    <button class="submit-btn" id="submitBtn" onclick="submitForm()">💌 도전 신청하기</button>
+    <p class="error-msg" id="errorMsg">잠시 오류가 났어요. 다시 시도해 주세요 🙏</p>
+    <p class="notice">신청 내용은 콘텐츠 제작에 활용될 수 있어요<br>개인정보는 수집하지 않습니다 🔒</p>
+
+  </div>
+
+  <div class="success-box" id="successBox">
+    <span class="big-emoji">🎉</span>
+    <h2>신청 완료!</h2>
+    <p>엘라라가 용기 내서 해볼게요<br>응원해줘서 고마워요 🫶</p>
+    <button class="reset-btn" onclick="resetForm()">다른 도전 신청하기</button>
+  </div>
+
+  <div class="footer">
+    🌟 엘라라 | 대신 도전해주는 사람 &nbsp;·&nbsp; DAY 5 / 30
+  </div>
+
+</div>
+
+<script>
+  // ⬇️ 여기에 Apps Script 웹앱 URL을 붙여넣으세요
+  const APPS_SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+  let selectedCategory = '';
+  let selectedScale = '';
+
+  document.querySelectorAll('.chip').forEach(c => {
+    c.addEventListener('click', () => {
+      document.querySelectorAll('.chip').forEach(x => x.classList.remove('selected'));
+      c.classList.add('selected');
+      selectedCategory = c.dataset.val;
+    });
+  });
+
+  document.querySelectorAll('.scale-btn').forEach(b => {
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.scale-btn').forEach(x => x.classList.remove('active'));
+      b.classList.add('active');
+      selectedScale = b.dataset.v;
+    });
+  });
+
+  async function submitForm() {
+    const nickname = document.getElementById('nickname').value.trim();
+    const content = document.getElementById('content').value.trim();
+    const reason = document.getElementById('reason').value.trim();
+    const cheer = document.getElementById('cheer').value.trim();
+    const errorMsg = document.getElementById('errorMsg');
+
+    if (!nickname || !content || !selectedCategory || !selectedScale) {
+      alert('닉네임, 도전 내용, 카테고리, 무서움/힘듦 지수는 꼭 입력해주세요 🙏');
+      return;
+    }
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>전송 중...';
+    errorMsg.style.display = 'none';
+
+    const data = {
+      nickname,
+      category: selectedCategory,
+      content,
+      reason,
+      scale: selectedScale,
+      cheer,
+      timestamp: new Date().toLocaleString('ko-KR')
+    };
+
+    try {
+      await fetch(APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      document.getElementById('formBody').style.display = 'none';
+      document.getElementById('successBox').style.display = 'block';
+    } catch (e) {
+      btn.disabled = false;
+      btn.innerHTML = '💌 도전 신청하기';
+      errorMsg.style.display = 'block';
+    }
+  }
+
+  function resetForm() {
+    document.getElementById('nickname').value = '';
+    document.getElementById('content').value = '';
+    document.getElementById('reason').value = '';
+    document.getElementById('cheer').value = '';
+    selectedCategory = '';
+    selectedScale = '';
+    document.querySelectorAll('.chip').forEach(x => x.classList.remove('selected'));
+    document.querySelectorAll('.scale-btn').forEach(x => x.classList.remove('active'));
+    document.getElementById('formBody').style.display = 'block';
+    document.getElementById('successBox').style.display = 'none';
+  }
+</script>
+</body>
+</html>
